@@ -61,3 +61,35 @@ export const getRestaurant = async(req,res) => {
         res.status(500).json({message:"Falha ao consultar os dados do restaurante"});
     }
 }
+
+export const getRestaurantByUserId = async(req, res) => {
+    const userId = req.params.id;
+
+    try {
+        const user = await prisma.user.findUnique({
+            where: { id: userId }
+        });
+
+        console.log(user);
+
+        if (!user) {
+            return res.status(404).json({ message: "Usuário não encontrado" });
+        }
+
+        if (!user.isAdmin) {
+            return res.status(403).json({ message: "Acesso negado. Apenas administradores podem visualizar restaurantes." });
+        }
+
+        const restaurant = await prisma.restaurant.findMany({
+            where: { userId },
+            include: {
+                dishes:true
+            }
+        });
+
+        res.status(200).json(restaurant);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({message:"Falha ao consultar os dados do restaurante"});
+    }
+}
