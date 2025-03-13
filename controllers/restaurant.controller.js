@@ -93,3 +93,94 @@ export const getRestaurantByUserId = async(req, res) => {
         res.status(500).json({message:"Falha ao consultar os dados do restaurante"});
     }
 }
+
+export const updateRestaurantBanner = async (req, res) => {
+    const { id } = req.params;
+    const { banner } = req.body;
+
+    try {
+        const findRestaurant = await prisma.restaurant.findUnique({
+            where: { id }
+        });
+
+        if (!findRestaurant) {
+            return res.status(404).json({ message: "Restaurante não encontrado" });
+        }
+
+        const updatedRestaurant = await prisma.restaurant.update({
+            where: { id },
+            data: { banner }
+        });
+
+        res.status(200).json({
+            message: "Banner atualizado com sucesso",
+            restaurant: updatedRestaurant
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "Falha ao atualizar o banner do restaurante" });
+    }
+};
+
+export const updateRestaurantLogo = async (req, res) => {
+    const id = req.params.id
+    const { logo } = req.body;
+
+    try {
+        const findRestaurant = await prisma.restaurant.findUnique({
+            where: { id }
+        });
+
+        if (!findRestaurant) {
+            return res.status(404).json({ message: "Restaurante não encontrado" });
+        }
+
+        const updatedLogo = await prisma.restaurant.update({
+            where:{ id },
+            data: { logo }
+        });
+
+        res.status(200).json({
+            message:"Logo atualizada com sucesso.",
+            restaurant: updatedLogo
+        })
+        
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({message:"Falha ao atualizar a logo do restaurante"});
+    }
+}
+
+export const updateRestaurantInfo = async (req, res) => {
+    const id = req.params.id
+    const { name, address, description, menuOptions } = req.body;
+
+    try {
+        const findRestaurant = await prisma.restaurant.findUnique({
+            where: { id }
+        });
+
+        if (!findRestaurant) {
+            return res.status(404).json({ message: "Restaurante não encontrado" });
+        }
+
+        const updatedRestaurantInfo = await prisma.restaurant.update({
+            where:{ id },
+            data: { 
+                name,
+                address,
+                description,
+                menuOptions
+             }
+        });
+
+        res.status(200).json({
+            message:"Dados do restaurantes atualizados com sucesso.",
+            restaurant: updatedRestaurantInfo
+        })
+        
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({message:"Falha ao atualizar a logo do restaurante"});
+    }
+}
