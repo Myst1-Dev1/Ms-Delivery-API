@@ -4,6 +4,7 @@ import cors from 'cors';
 import authRoute from './routes/auth.route.js';
 import restaurantRoute from './routes/restaurant.route.js';
 import dishesRoute from './routes/dishes.route.js';
+import ordersRoute from './routes/order.route.js';
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.use(cookieParser());
 app.use("/api/auth", authRoute);
 app.use("/api/restaurant", restaurantRoute);
 app.use("/api/dishes", dishesRoute);
+app.use("/api/orders", ordersRoute);
 
 app.listen(8800, () => {
     console.log('Servidor rodando na porta 8800');

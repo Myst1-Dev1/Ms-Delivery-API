@@ -3,18 +3,40 @@ import jwt from "jsonwebtoken";
 import prisma from '../lib/prisma.js';
 
 export const register = async (req, res) => {
-    const { name, email, password, isAdmin } = req.body
+    const { name, email, password, address, zipCode, isAdmin } = req.body
 
     const hashedPassword  = await bcrypt.hash(password, 10);
 
     try {
         const newUser = await prisma.user.create({
             data: {
-                name, email, password: hashedPassword, isAdmin
+                name, email, password: hashedPassword, address, zipCode, isAdmin
             }
         });
 
         console.log(newUser);
+
+        res.status(200).json({message:"Usuário criado com sucesso!"});
+        
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({message:"Falha ao fazer cadastro!"})
+    }
+}
+
+export const registerRestaurant = async (req, res) => {
+    const { name, email, password, isAdmin } = req.body
+
+    const hashedPassword  = await bcrypt.hash(password, 10);
+
+    try {
+        const newRestaurantAccount = await prisma.user.create({
+            data: {
+                name, email, password: hashedPassword, isAdmin
+            }
+        });
+
+        console.log(newRestaurantAccount);
 
         res.status(200).json({message:"Usuário criado com sucesso!"});
         

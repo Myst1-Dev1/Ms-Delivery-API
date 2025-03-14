@@ -18,7 +18,10 @@ model User {
   name       String
   email      String       @unique
   password   String
+  address    String?
+  zipCode    String?
   isAdmin    Boolean
+  orders     Orders[]
   restaurants Restaurant[] @relation("UserToRestaurant")
 }
 
@@ -32,6 +35,7 @@ model Restaurant {
   type        String
   menuOptions String[]
   dishes      Dishes[]
+  orders      Orders[]
   user        User     @relation(fields: [userId], references: [id], name: "UserToRestaurant")
   userId      String   @db.ObjectId
 }
@@ -45,4 +49,19 @@ model Dishes {
   menuOption    String
   restaurant    Restaurant @relation(fields: [restaurantId], references: [id])
   restaurantId  String     @db.ObjectId
+}
+
+model Orders {
+  id                     String     @id @default(auto()) @map("_id") @db.ObjectId
+  userId                 String  @db.ObjectId
+  user                   User    @relation(fields: [userId], references: [id])
+  restaurantId           String  @db.ObjectId
+  restaurant             Restaurant    @relation(fields: [restaurantId], references: [id])
+  userName               String
+  address                String
+  orderItems             String[]
+  additionalInformations String[]
+  zipCode                String
+  orderValue             Int
+  status                 Boolean
 }
