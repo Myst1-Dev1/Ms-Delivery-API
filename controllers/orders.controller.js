@@ -12,7 +12,7 @@ export const getOrders = async(req, res) => {
 
         const orders = await prisma.orders.findMany({
             where: { restaurantId: id }
-        })
+        });
 
         res.status(200).json(orders);
         
@@ -24,7 +24,7 @@ export const getOrders = async(req, res) => {
 
 export const createNewOrder = async(req, res) => {
     const id = req.params.id;
-    const { userName, address, orderItems, additionalInformations, zipCode, orderValue, restaurantId, userId, status } = req.body;
+    const { userName, address, orderProductsName, orderProductsImage, orderProductsObservation, zipCode, orderValue, restaurantId, userId, status } = req.body;
 
     try {
         const restaurantExists = await prisma.restaurant.findUnique({
@@ -37,8 +37,9 @@ export const createNewOrder = async(req, res) => {
             data: {
                 userName,
                 address,
-                orderItems,
-                additionalInformations,
+                orderProductsName,
+                orderProductsImage,
+                orderProductsObservation,
                 zipCode,
                 orderValue,
                 restaurantId,
@@ -56,7 +57,22 @@ export const createNewOrder = async(req, res) => {
 }
 
 export const updateOrder = async(req, res) => {
+    const id = req.params.id;
+    const { status } = req.body;
+
     try {
+        // const restaurantExists = await prisma.restaurant.findUnique({
+        //     where: { id }
+        // });
+
+        // if(!restaurantExists) return res.status(404).json({message:"Restaurante não encontrado"});
+
+        await prisma.orders.update({
+            where: { id },
+            data:{ status }
+        });
+        
+        res.status(200).json({message:"Pedido atualizado com sucesso"});
         
     } catch (error) {
         console.log(error);

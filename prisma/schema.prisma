@@ -52,16 +52,18 @@ model Dishes {
 }
 
 model Orders {
-  id                     String     @id @default(auto()) @map("_id") @db.ObjectId
-  userId                 String  @db.ObjectId
-  user                   User    @relation(fields: [userId], references: [id])
-  restaurantId           String  @db.ObjectId
-  restaurant             Restaurant    @relation(fields: [restaurantId], references: [id])
-  userName               String
-  address                String
-  orderItems             String[]
-  additionalInformations String[]
-  zipCode                String
-  orderValue             Int
-  status                 Boolean
+  id                       String     @id @default(auto()) @map("_id") @db.ObjectId
+  userId                   String  @db.ObjectId
+  user                     User    @relation(fields: [userId], references: [id])
+  restaurantId             String  @db.ObjectId
+  restaurant               Restaurant    @relation(fields: [restaurantId], references: [id])
+  userName                 String
+  address                  String
+  zipCode                  String
+  orderProductsName        String[]
+  orderProductsImage       String[]
+  orderProductsObservation String[]
+  orderValue               Int
+  status                   String
+  createdAt                DateTime @default(now())
 }
