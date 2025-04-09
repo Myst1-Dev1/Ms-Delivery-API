@@ -33,6 +33,7 @@ model Restaurant {
   address     String
   description String
   type        String
+  isOpen      Boolean
   menuOptions String[]
   dishes      Dishes[]
   orders      Orders[]

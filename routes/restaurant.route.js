@@ -6,7 +6,8 @@ import {
     getRestaurantByUserId, 
     updateRestaurantBanner,
     updateRestaurantLogo,
-    updateRestaurantInfo
+    updateRestaurantInfo,
+    openRestaurant
 } from '../controllers/restaurant.controller.js';
 import { verifyToken } from '../middleware/verifytoken.js';
 
@@ -19,5 +20,6 @@ router.get("/userRestaurant/:id", getRestaurantByUserId);
 router.put("/banner/:id", updateRestaurantBanner);
 router.put("/logo/:id", updateRestaurantLogo);
 router.put("/info/:id", updateRestaurantInfo);
+router.put("/open/:id", openRestaurant);
 
 export default router;

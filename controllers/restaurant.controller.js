@@ -1,7 +1,7 @@
 import prisma from "../lib/prisma.js";
 
 export const createRestaurant = async(req,res) => {
-    const { name, logo, banner, address, description, type, menuOptions, userId } = req.body;
+    const { name, logo, banner, address, description, type, menuOptions, userId, isOpen } = req.body;
     
     try {
         const newRestaurant = await prisma.restaurant.create({
@@ -13,7 +13,8 @@ export const createRestaurant = async(req,res) => {
                 description,
                 type,
                 menuOptions,
-                userId
+                userId,
+                isOpen
             },
         });
 
@@ -32,7 +33,8 @@ export const getAllRestaurants = async(req,res) => {
     try {
         const getRestaurants = await prisma.restaurant.findMany({
             include: {
-                dishes:true
+                dishes:true,
+                orders:true
             }
         });
 
@@ -155,7 +157,7 @@ export const updateRestaurantLogo = async (req, res) => {
 
 export const updateRestaurantInfo = async (req, res) => {
     const id = req.params.id
-    const { name, address, description, menuOptions } = req.body;
+    const { name, address, description } = req.body;
 
     try {
         const findRestaurant = await prisma.restaurant.findUnique({
@@ -172,7 +174,7 @@ export const updateRestaurantInfo = async (req, res) => {
                 name,
                 address,
                 description,
-                menuOptions
+                // menuOptions
              }
         });
 
@@ -184,5 +186,36 @@ export const updateRestaurantInfo = async (req, res) => {
     } catch (error) {
         console.log(error);
         res.status(500).json({message:"Falha ao atualizar a logo do restaurante"});
+    }
+}
+
+export const openRestaurant = async (req, res) => {
+    const id = req.params.id
+    const { isOpen } = req.body;
+
+    try {
+        const findRestaurant = await prisma.restaurant.findUnique({
+            where: { id }
+        });
+
+        if (!findRestaurant) {
+            return res.status(404).json({ message: "Restaurante não encontrado" });
+        }
+
+        const updateOpenRestaurant = await prisma.restaurant.update({
+            where:{ id },
+            data: { 
+                isOpen
+             }
+        });
+
+        res.status(200).json({
+            message:"Restaurante aberto com sucesso.",
+            restaurant: updateOpenRestaurant
+        })
+        
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({message:"Falha ao abrir o restaurante."});
     }
 }

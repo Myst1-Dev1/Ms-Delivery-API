@@ -81,10 +81,16 @@ export const updateOrder = async(req, res) => {
 }
 
 export const deleteOrder = async(req, res) => {
+    const id = req.params.id;
+    
     try {
-        
+        await prisma.orders.delete({
+            where: { id }
+        });
+
+        res.status(200).json({message:"Pedido deletado com sucesso!"})
     } catch (error) {
         console.log(error);
-        res.status(500).json({message:"Falha ao consultar os dados dos pedidos"});
+        res.status(500).json({message:"Erro ao deletar pedido"})
     }
 }
