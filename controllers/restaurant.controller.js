@@ -28,13 +28,13 @@ export const createRestaurant = async(req,res) => {
     }
 }
 
-
 export const getAllRestaurants = async(req,res) => {
     try {
         const getRestaurants = await prisma.restaurant.findMany({
             include: {
                 dishes:true,
-                orders:true
+                orders:true,
+                avaliations:true
             }
         });
 
@@ -54,7 +54,8 @@ export const getRestaurant = async(req,res) => {
             where: { id },
             include: {
                 dishes:true,
-                orders: true
+                orders: true,
+                avaliations:true
             }
         });
 
@@ -87,7 +88,8 @@ export const getRestaurantByUserId = async(req, res) => {
             where: { userId },
             include: {
                 dishes:true,
-                orders: true
+                orders: true,
+                avaliations:true
             }
         });
 
@@ -219,3 +221,40 @@ export const openRestaurant = async (req, res) => {
         res.status(500).json({message:"Falha ao abrir o restaurante."});
     }
 }
+
+export const createAvaliation = async (req, res) => {
+    const { stars, comment, restaurantId, userId } = req.body;
+  
+    try {
+      // Buscar nome do usuário
+      const user = await prisma.user.findUnique({
+        where: { id: userId },
+      });
+  
+      if (!user) {
+        return res.status(404).json({ message: "Usuário não encontrado" });
+      }
+  
+      const newAvaliation = await prisma.avaliation.create({
+        data: {
+          stars,
+          comment,
+          userName: user.name,
+          restaurant: {
+            connect: { id: restaurantId },
+          },
+          user: {
+            connect: { id: userId },
+          },
+        },
+      });
+
+      console.log('aqui', newAvaliation);
+  
+      res.status(201).json(newAvaliation);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Erro ao salvar avaliação" });
+    }
+  };
+  
