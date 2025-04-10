@@ -22,16 +22,56 @@ export const getOrders = async(req, res) => {
     }
 }
 
-export const createNewOrder = async(req, res) => {
+// export const createNewOrder = async(req, res) => {
+//     const id = req.params.id;
+//     const { userName, address, orderProductsName, orderProductsImage, orderProductsObservation, zipCode, orderValue, restaurantId, userId, status } = req.body;
+
+//     try {
+//         const restaurantExists = await prisma.restaurant.findUnique({
+//             where: { id }
+//         });
+
+//         if(!restaurantExists) return res.status(404).json({message:"Restaurante não encontrado"});
+
+//         const createOrder = await prisma.orders.create({
+//             data: {
+//                 userName,
+//                 address,
+//                 orderProductsName,
+//                 orderProductsImage,
+//                 orderProductsObservation,
+//                 zipCode,
+//                 orderValue,
+//                 restaurantId,
+//                 status,
+//                 userId
+//             }
+//         });
+
+//         res.status(200).json(createOrder);
+        
+//     } catch (error) {
+//         console.log(error);
+//         res.status(500).json({message:"Falha ao criar um novo pedido."});
+//     }
+// }
+
+export const createNewOrder = async (req, res) => {
+    const io = req.app.get("io");
+
     const id = req.params.id;
-    const { userName, address, orderProductsName, orderProductsImage, orderProductsObservation, zipCode, orderValue, restaurantId, userId, status } = req.body;
+    const {
+        userName, address, orderProductsName, orderProductsImage,
+        orderProductsObservation, zipCode, orderValue,
+        restaurantId, userId, status
+    } = req.body;
 
     try {
         const restaurantExists = await prisma.restaurant.findUnique({
             where: { id }
         });
 
-        if(!restaurantExists) return res.status(404).json({message:"Restaurante não encontrado"});
+        if (!restaurantExists) return res.status(404).json({ message: "Restaurante não encontrado" });
 
         const createOrder = await prisma.orders.create({
             data: {
@@ -48,13 +88,15 @@ export const createNewOrder = async(req, res) => {
             }
         });
 
+        // Envia evento de novo pedido
+        io.emit("new-order", createOrder);
+
         res.status(200).json(createOrder);
-        
     } catch (error) {
         console.log(error);
-        res.status(500).json({message:"Falha ao criar um novo pedido."});
+        res.status(500).json({ message: "Falha ao criar um novo pedido." });
     }
-}
+};
 
 export const updateOrder = async(req, res) => {
     const id = req.params.id;
