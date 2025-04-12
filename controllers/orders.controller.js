@@ -1,5 +1,16 @@
 import prisma from "../lib/prisma.js";
 
+export const getAllOrders = async(req, res) => {
+    try {
+        const getOrders = await prisma.orders.findMany();
+
+        res.status(200).json(getOrders);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({message:"Falha ao consultar os dados dos pedidos"});
+    }
+}
+
 export const getOrders = async(req, res) => {
     const id = req.params.id;
 
@@ -137,42 +148,42 @@ export const deleteOrder = async(req, res) => {
     }
 }
 
-// export const saveOrderOnUser = async (req, res) => {
-//     const id = req.params.id;
-//     const {
-//       orderProductsName,
-//       orderProductsImage,
-//       orderValue,
-//       restaurantId,
-//       status
-//     } = req.body;
+export const saveOrderOnUser = async (req, res) => {
+    const id = req.params.id;
+    const {
+      orderProductsName,
+      orderProductsImage,
+      orderValue,
+      restaurantId,
+      status
+    } = req.body;
   
-//     try {
-//       const userExists = await prisma.user.findUnique({
-//         where: { id }
-//       });
+    try {
+      const userExists = await prisma.user.findUnique({
+        where: { id }
+      });
   
-//       if (!userExists) {
-//         return res.status(404).json({ message: "Usuário não encontrado" });
-//       }
+      if (!userExists) {
+        return res.status(404).json({ message: "Usuário não encontrado" });
+      }
   
-//       const newOrder = await prisma.orders.create({
-//         data: {
-//           orderProductsName,
-//           orderProductsImage,
-//           orderValue,
-//           restaurantId,
-//           status,
-//           user: {
-//             connect: { id } // associa o pedido ao usuário
-//           }
-//         }
-//       });
+      const newOrder = await prisma.orders.create({
+        data: {
+          orderProductsName,
+          orderProductsImage,
+          orderValue,
+          restaurantId,
+          status,
+          user: {
+            connect: { id } // associa o pedido ao usuário
+          }
+        }
+      });
   
-//       res.status(201).json(newOrder);
+      res.status(201).json(newOrder);
   
-//     } catch (error) {
-//       console.log(error);
-//       res.status(500).json({ message: "Falha ao salvar um pedido no usuário." });
-//     }
-// };  
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: "Falha ao salvar um pedido no usuário." });
+    }
+};  
