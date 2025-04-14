@@ -51,6 +51,7 @@ import restaurantRoute from './routes/restaurant.route.js';
 import dishesRoute from './routes/dishes.route.js';
 import ordersRoute from './routes/order.route.js';
 import userRoute from './routes/user.route.js';
+import chatRoute from './routes/chat.route.js';
 import { Server } from "socket.io";
 import http from "http";
 
@@ -65,23 +66,33 @@ const io = new Server(server, {
 
 io.on("connection", (socket) => {
     console.log("Novo cliente conectado:", socket.id);
-
-    // Entrar na sala do pedido
+  
+    // 👉 Entra na sala com base no orderId
     socket.on("join_room", (orderId) => {
-        socket.join(orderId);
-        console.log(`Socket ${socket.id} entrou na sala do pedido ${orderId}`);
+      socket.join(orderId);
+      console.log(`Socket ${socket.id} entrou na sala do pedido ${orderId}`);
     });
-
-    // Receber e reenviar mensagens
+  
+    // 👉 Recebe e envia mensagens
     socket.on("send_message", ({ orderId, sender, message }) => {
-        const data = { sender, message, timestamp: new Date() };
-
-        // Reenvia para todos na sala (incluindo o restaurante e o cliente)
-        io.to(orderId).emit("receive_message", data);
+      const data = {
+        sender,
+        message,
+        timestamp: new Date(),
+      };
+  
+      // Envia a mensagem para todos na sala
+      io.to(orderId).emit("receive_message", data);
+  
+      // 🔔 Notifica todos (exceto o remetente) que chegou mensagem nova
+      socket.to(orderId).emit("new_notification", {
+        orderId,
+        from: sender,
+      });
     });
-
+  
     socket.on("disconnect", () => {
-        console.log("Cliente desconectado:", socket.id);
+      console.log("Cliente desconectado:", socket.id);
     });
 });
 
@@ -100,5 +111,6 @@ app.use("/api/restaurant", restaurantRoute);
 app.use("/api/dishes", dishesRoute);
 app.use("/api/orders", ordersRoute);
 app.use("/api/user", userRoute);
+app.use("/api/chat", chatRoute);
 
 server.listen(8800, () => console.log("Servidor rodando na porta 8800"));

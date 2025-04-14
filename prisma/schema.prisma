@@ -82,3 +82,11 @@ model Avaliation {
   user         User?      @relation(fields: [userId], references: [id])
   userId       String?    @db.ObjectId
 }
+
+model Chat {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  orderId   String
+  sender    String   // "cliente" ou "restaurante"
+  message   String
+  timestamp DateTime @default(now())
+}
