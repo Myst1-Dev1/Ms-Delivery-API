@@ -54,6 +54,7 @@ import userRoute from './routes/user.route.js';
 import chatRoute from './routes/chat.route.js';
 import { Server } from "socket.io";
 import http from "http";
+import { setupSwagger } from './swagger.js';
 
 const app = express();
 const server = http.createServer(app);
@@ -97,6 +98,8 @@ io.on("connection", (socket) => {
 });
 
 app.set("io", io);
+
+setupSwagger(app);
 
 app.use(cors({
     origin: process.env.CLIENT_URL || '*',
