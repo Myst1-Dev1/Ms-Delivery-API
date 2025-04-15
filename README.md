@@ -38,7 +38,10 @@ cd ms-delivery-api
 
 ```
 2. Instale as dependências
-  npm install
+ ```
+npm install
+
+```
 
 3. Configure as váriaveis de ambiente
 ```
