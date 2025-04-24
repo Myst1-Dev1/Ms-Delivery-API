@@ -32,6 +32,7 @@ model Restaurant {
   logo        String
   banner      String
   address     String
+  zipCode     String
   description String
   type        String
   isOpen      Boolean

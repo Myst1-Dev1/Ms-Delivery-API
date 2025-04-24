@@ -10,7 +10,7 @@
  *         application/json:
  *           schema:
  *             type: object
- *             required: [name, address, description, type, userId]
+ *             required: [name, address, zipCode, description, type, userId]
  *             properties:
  *               name:
  *                 type: string
@@ -19,6 +19,8 @@
  *               banner:
  *                 type: string
  *               address:
+ *                 type: string
+ *               zipCode:
  *                 type: string
  *               description:
  *                 type: string
@@ -181,6 +183,8 @@
  *               name:
  *                 type: string
  *               address:
+ *                 type: string
+ *               zipCode:
  *                 type: string
  *               description:
  *                 type: string

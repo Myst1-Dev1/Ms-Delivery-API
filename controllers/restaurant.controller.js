@@ -1,7 +1,7 @@
 import prisma from "../lib/prisma.js";
 
 export const createRestaurant = async(req,res) => {
-    const { name, logo, banner, address, description, type, menuOptions, userId, isOpen } = req.body;
+    const { name, logo, banner, address, zipCode, description, type, menuOptions, userId, isOpen } = req.body;
     
     try {
         const newRestaurant = await prisma.restaurant.create({
@@ -10,6 +10,7 @@ export const createRestaurant = async(req,res) => {
                 logo,
                 banner,
                 address,
+                zipCode,
                 description,
                 type,
                 menuOptions,
@@ -159,7 +160,7 @@ export const updateRestaurantLogo = async (req, res) => {
 
 export const updateRestaurantInfo = async (req, res) => {
     const id = req.params.id
-    const { name, address, description } = req.body;
+    const { name, address, zipCode, description } = req.body;
 
     try {
         const findRestaurant = await prisma.restaurant.findUnique({
@@ -175,6 +176,7 @@ export const updateRestaurantInfo = async (req, res) => {
             data: { 
                 name,
                 address,
+                zipCode,
                 description,
                 // menuOptions
              }
