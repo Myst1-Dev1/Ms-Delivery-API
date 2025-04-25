@@ -23,7 +23,6 @@ API RESTful completa para um sistema de delivery, construída com **Node.js**, *
 - Socket.IO (chat em tempo real)
 - Swagger (documentação da API)
 - Bcrypt + JWT (autenticação)
-- EdgeStore (upload de imagens)
 - Render (deploy)
 
 ---
